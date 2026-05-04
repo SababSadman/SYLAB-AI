@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0f172a;
+  --color-accent: #29afb4;
+  --color-site-bg: #f8fafc;
+  --color-card-bg: rgba(255, 255, 255, 0.8);
+}
+
+@layer base {
+  body {
+    @apply font-['Manrope',sans-serif] bg-site-bg text-primary antialiased;
+  }
+  
+  h1, h2, h3 {
+    @apply tracking-tighter font-black;
+  }
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 10px 40px -10px rgba(15, 23, 42, 0.05);
+}
+
+.accent-glow {
+  box-shadow: 0 0 30px -5px rgba(41, 175, 180, 0.2);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #0f172a 0%, #29afb4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.mesh-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(182, 60%, 80%, 0.4) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(220, 60%, 90%, 0.4) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(182, 60%, 80%, 0.3) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, hsla(220, 60%, 90%, 0.4) 0px, transparent 50%);
+  z-index: -1;
+}
+
+.slide-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

@@ -1,0 +1,694 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  ChevronRight, 
+  ChevronLeft, 
+  Target, 
+  Database, 
+  Zap, 
+  Layout, 
+  BarChart, 
+  CheckCircle2, 
+  Calendar, 
+  Users, 
+  MessageSquare, 
+  Video, 
+  FileText,
+  Clock,
+  Play,
+  Image as ImageIcon,
+  X
+} from 'lucide-react';
+import { getTransition } from './transitions.js';
+import { ParticleField, MetricCard, ScanLine } from './components.jsx';
+
+const LookAndFeelPlayground = () => {
+  const [activeColor, setActiveColor] = useState('#29AFB4');
+  const [hoveredToken, setHoveredToken] = useState(null);
+
+  const colors = [
+    { hex: '#0F2233', name: 'Primary' },
+    { hex: '#29AFB4', name: 'Tertiary' },
+    { hex: '#F8FAFC', name: 'Neutral' },
+    { hex: '#FFFFFF', name: 'White Cards' }
+  ];
+
+  return (
+    <div className="grid grid-cols-2 gap-12 h-full items-center py-4">
+      <div className="space-y-6">
+        <section>
+          <h3 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Interactive Palette</h3>
+          <div className="flex gap-4">
+            {colors.map((color) => (
+              <motion.button
+                key={color.hex}
+                whileHover={{ y: -5, scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setActiveColor(color.hex)}
+                className={`group relative flex flex-col items-center gap-3 p-2 rounded-2xl transition-all ${activeColor === color.hex ? 'bg-white shadow-xl ring-1 ring-black/5' : 'hover:bg-white/40'}`}
+              >
+                <div 
+                  className="w-12 h-12 rounded-xl shadow-inner border border-black/5 transition-transform"
+                  style={{ backgroundColor: color.hex }}
+                />
+                <span className="text-[10px] font-mono text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">{color.name}</span>
+                {activeColor === color.hex && (
+                  <motion.div layoutId="active-swatch" className="absolute -bottom-1 w-1 h-1 bg-primary rounded-full" />
+                )}
+              </motion.button>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h3 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Responsive Typography</h3>
+          <motion.div 
+            className="space-y-1 group cursor-default"
+            onHoverStart={() => setHoveredToken('typo')}
+            onHoverEnd={() => setHoveredToken(null)}
+          >
+            <motion.p 
+              className="text-5xl font-black tracking-tighter"
+              animate={{ color: hoveredToken === 'typo' ? activeColor : '#0F2233' }}
+            >
+              Manrope
+            </motion.p>
+            <p className="text-sm text-slate-500 font-medium mt-2">Hierarchy: Display, H1, Body, Label</p>
+            <p className="text-xs text-slate-400 font-medium mt-1">Spacing & rounded corners scale defined.</p>
+          </motion.div>
+        </section>
+
+        <section>
+          <h3 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Button System</h3>
+          <div className="flex flex-wrap gap-4">
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-6 py-2.5 rounded-xl font-bold text-white shadow-lg transition-colors"
+              style={{ backgroundColor: activeColor, boxShadow: `0 10px 20px -5px ${activeColor}40` }}
+            >
+              Primary
+            </motion.button>
+            <button className="px-6 py-2.5 rounded-xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-all">
+              Secondary
+            </button>
+            <button className="px-6 py-2.5 rounded-xl font-bold border-2 transition-all" style={{ borderColor: activeColor, color: activeColor }}>
+              Outline
+            </button>
+            <button className="px-6 py-2.5 rounded-xl font-bold text-slate-500 hover:bg-slate-50 transition-all">
+              Ghost
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <div className="relative h-full flex items-center justify-center">
+        <motion.div 
+          className="glass-card rounded-[3rem] w-full max-h-[500px] aspect-square relative overflow-hidden p-8 flex flex-col justify-center gap-6 group"
+          animate={{ borderColor: `${activeColor}20` }}
+        >
+          <ScanLine color={activeColor} />
+          
+          {/* Animated Mockup Elements */}
+          <motion.div 
+            className="w-2/3 h-4 rounded-full bg-slate-100 relative overflow-hidden"
+            whileHover={{ scale: 1.02 }}
+          >
+            <motion.div 
+              className="absolute inset-0 origin-left"
+              style={{ backgroundColor: activeColor }}
+              animate={{ scaleX: [0, 0.7, 0.4, 0.9] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </motion.div>
+
+          <div className="flex gap-4 items-center">
+             <motion.div 
+               className="w-16 h-16 rounded-2xl flex items-center justify-center text-white"
+               style={{ backgroundColor: activeColor }}
+               animate={{ rotate: [0, 90, 180, 270, 360] }}
+               transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+             >
+               <Zap size={32} />
+             </motion.div>
+             <div className="space-y-2 flex-1">
+                <div className="w-full h-2 bg-slate-100 rounded-full" />
+                <div className="w-1/2 h-2 bg-slate-100 rounded-full opacity-50" />
+             </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 pt-4">
+             {[1,2].map(i => (
+               <motion.div 
+                 key={i} 
+                 className="h-24 rounded-2xl bg-slate-50/50 border border-slate-100 p-4 flex flex-col justify-between"
+                 whileHover={{ y: -5, backgroundColor: '#fff', borderColor: activeColor + '40' }}
+               >
+                 <div className="w-8 h-8 rounded-lg bg-slate-100" />
+                 <div className="w-full h-2 bg-slate-100 rounded-full" />
+               </motion.div>
+             ))}
+          </div>
+
+          {/* Floating Accents */}
+          <motion.div 
+            className="absolute top-8 right-8 w-12 h-12 rounded-full blur-2xl"
+            animate={{ backgroundColor: activeColor, scale: [1, 1.5, 1] }}
+            transition={{ duration: 3, repeat: Infinity }}
+          />
+        </motion.div>
+      </div>
+    </div>
+  );
+};
+
+const FigmaDesignsPreview = () => {
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const items = [
+    { title: "Student Dashboard", desc: "Knowledge Graph preview, recent activity, recommended next steps", src: "/syllabai_dashboard_mockup_1777899157746.png", type: 'image' },
+    { title: "Past Paper Viewer", desc: "Mark scheme toggle, question logger controls, AI chat sidebar", src: "/demo-video.mp4", type: 'video' },
+    { title: "AI Tutor (RAG Chat)", desc: "Full chat interface with citations and source links", src: "/syllabai_rag_chat_mockup_1777899174277.png", type: 'image' },
+    { title: "Teacher Hub", desc: "Class KG heatmap, assignment submissions, at-risk alerts", src: "/syllabai_teacher_hub_mockup_1777899192610.png", type: 'image' }
+  ];
+
+  return (
+    <>
+      <div className="flex flex-col h-full space-y-6">
+        <div className="flex justify-end">
+          <span className="px-4 py-1.5 bg-accent/10 text-accent font-bold text-xs uppercase tracking-widest rounded-full border border-accent/20">
+            Interactive prototypes ready
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-x-8 gap-y-6 flex-1 items-center">
+          {items.map((item, i) => (
+            <motion.div 
+              key={i}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: i * 0.1 }}
+              className="flex items-center gap-4 glass-card p-3 rounded-2xl cursor-pointer hover:border-accent/40 transition-colors group relative"
+              onClick={() => setSelectedItem(item)}
+            >
+              <div className="w-1/3 aspect-[4/3] rounded-xl overflow-hidden shadow-sm relative">
+                <MediaPlaceholder src={item.src} type={item.type} title={item.title} />
+                <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
+                   <div className="bg-white/95 text-primary px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">Expand</div>
+                </div>
+              </div>
+              <div className="w-2/3 pr-2">
+                <p className="font-bold text-primary text-sm mb-1 group-hover:text-accent transition-colors">{item.title}</p>
+                <p className="text-[10px] text-slate-500 leading-tight">{item.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {selectedItem && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-12 bg-slate-900/60 backdrop-blur-xl"
+            onClick={() => setSelectedItem(null)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: 20, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="relative w-full max-w-6xl max-h-[85vh] bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col border border-white/20"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                 <div>
+                   <h3 className="font-black text-primary text-xl tracking-tight">{selectedItem.title}</h3>
+                   <p className="text-sm text-slate-500 font-medium">{selectedItem.desc}</p>
+                 </div>
+                 <button 
+                   onClick={() => setSelectedItem(null)}
+                   className="w-12 h-12 bg-white shadow-sm border border-slate-200 text-slate-500 hover:bg-rose-500 hover:text-white hover:border-rose-500 rounded-2xl flex items-center justify-center transition-all"
+                 >
+                   <X size={24} />
+                 </button>
+              </div>
+              <div className="flex-1 overflow-hidden bg-slate-100/50 p-8 flex justify-center items-center">
+                 {selectedItem.type === 'image' ? (
+                   <img src={selectedItem.src} alt={selectedItem.title} className="max-w-full max-h-full object-contain rounded-xl shadow-lg border border-slate-200" />
+                 ) : (
+                   <video src={selectedItem.src} className="max-w-full max-h-full object-contain rounded-xl shadow-lg border border-slate-200" controls autoPlay loop />
+                 )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+const MediaPlaceholder = ({ src, type = 'image', alt, title }) => {
+  const [hasError, setHasError] = useState(false);
+
+  if (!src || hasError) {
+    return (
+      <div className="w-full h-full bg-black/5 border-2 border-dashed border-black/10 rounded-2xl flex flex-col items-center justify-center text-slate-400 p-6 text-center space-y-3">
+        {type === 'video' ? <Play size={40} /> : <ImageIcon size={40} />}
+        <div>
+          <p className="font-bold text-sm">Missing {type}</p>
+          <p className="text-[10px] uppercase tracking-wider">Add to public folder</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full h-full overflow-hidden rounded-2xl border border-black/5 bg-white shadow-xl group relative">
+      <ScanLine />
+      {type === 'image' ? (
+        <img 
+          src={src} 
+          alt={alt || title} 
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+          onError={() => setHasError(true)}
+        />
+      ) : (
+        <video 
+          src={src} 
+          className="w-full h-full object-cover" 
+          controls 
+          autoPlay 
+          muted 
+          loop
+          onError={() => setHasError(true)}
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+        <p className="text-white text-xs font-bold uppercase tracking-widest">{title}</p>
+      </div>
+    </div>
+  );
+};
+
+const COLORS = {
+  primary: '#0F172A',
+  accent: '#29AFB4',
+  background: '#F8FAFC',
+};
+
+const SLIDES = [
+  {
+    id: 1,
+    title: "SyllabAI – Project Progress",
+    subtitle: "AI-powered Edexcel & Cambridge IGCSE/IAL Learning Platform",
+    content: (
+      <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
+        <motion.div 
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="text-8xl font-black tracking-tighter"
+        >
+          <span className="text-primary">Syllab</span>
+          <span className="text-accent italic">AI</span>
+        </motion.div>
+        <motion.p 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-2xl text-slate-500 max-w-2xl font-medium"
+        >
+          AI-powered Edexcel & Cambridge IGCSE/IAL Learning Platform
+        </motion.p>
+        <motion.div 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="pt-12 text-lg text-slate-400"
+        >
+          <p className="font-bold text-primary text-xl">[Your Name / Team Name]</p>
+          <p>{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+        </motion.div>
+      </div>
+    ),
+  },
+  {
+    id: 2,
+    title: "Recap: First Presentation",
+    content: (
+      <div className="grid grid-cols-2 gap-12 h-full items-center">
+        <div className="space-y-6">
+          {[
+            { icon: Layout, text: "Unified LMS", desc: "Past papers, syllabus mapping" },
+            { icon: Zap, text: "RAG AI Chatbot + Knowledge Graph", desc: "Core differentiators" },
+            { icon: Users, text: "Dual B2C & B2B Model", desc: "Students and Schools/Teachers" },
+            { icon: BarChart, text: "Feasibility & Competitor Analysis", desc: "Completed" }
+          ].map((item, i) => (
+            <motion.div 
+              key={i}
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: i * 0.1 }}
+              className="flex items-center gap-4 p-5 glass-card rounded-2xl"
+            >
+              <div className="p-3 bg-accent/10 rounded-xl">
+                <item.icon className="text-accent" size={24} />
+              </div>
+              <div>
+                <h3 className="font-bold text-lg text-primary">{item.text}</h3>
+                <p className="text-slate-400 text-xs uppercase tracking-widest">{item.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+        <div className="glass-card rounded-[2.5rem] p-10 relative overflow-hidden">
+          <div className="absolute -top-10 -right-10 opacity-5 text-primary">
+            <Database size={300} />
+          </div>
+          <h3 className="text-3xl font-black mb-6 text-gradient">Core Pillars</h3>
+          <ul className="space-y-6 relative z-10">
+            {[
+              "RAG Tutor: Answers from official mark schemes",
+              "Knowledge Graph: Maps topic proficiency"
+            ].map((text, i) => (
+              <li key={i} className="flex gap-4 items-start">
+                <div className="w-2 h-2 bg-accent rounded-full mt-2 shadow-sm shadow-accent/40" />
+                <p className="text-slate-600 font-medium">{text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: 3,
+    title: "What’s New: Expanded Feature Set",
+    content: (
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 h-full items-center">
+        {[
+          { icon: Target, title: "Recommendation System", desc: "Personalised study path based on KG and interaction history" },
+          { icon: CheckCircle2, title: "Question Attempt Logger", desc: "Track every question, flag doubts, self‑confidence rating" },
+          { icon: FileText, title: "Mock Exam Generator", desc: "Creates full exam‑style papers using real past questions, following exam board blueprints" },
+          { icon: Video, title: "YouTube‑like Video Library", desc: "Curated educational videos, distraction‑free, with watch tracking and quiz integration" }
+        ].map((feature, i) => (
+          <motion.div 
+            key={i}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: i * 0.1 }}
+            className="glass-card p-8 rounded-3xl flex flex-col items-center text-center space-y-4 hover:border-accent/30 transition-all group"
+          >
+            <div className="w-16 h-16 bg-accent/5 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+              <feature.icon className="text-accent" size={32} />
+            </div>
+            <h3 className="font-bold text-xl leading-tight text-primary">{feature.title}</h3>
+            <p className="text-slate-500 text-sm">{feature.desc}</p>
+          </motion.div>
+        ))}
+      </div>
+    ),
+  },
+  {
+    id: 4,
+    title: "SyllabAI Look & Feel",
+    content: <LookAndFeelPlayground />
+  },
+  {
+    id: 5,
+    title: "Figma Designs: Core Progress",
+    content: <FigmaDesignsPreview />
+  },
+  {
+    id: 6,
+    title: "Already Working: RAG Chatbot",
+    content: (
+      <div className="grid grid-cols-2 gap-12 h-full items-center">
+         <div className="space-y-6">
+            <div className="p-10 glass-card rounded-[3rem] space-y-8 relative overflow-hidden">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-accent text-white rounded-2xl flex items-center justify-center shadow-lg shadow-accent/20">
+                  <Zap size={28} />
+                </div>
+                <h3 className="font-black text-2xl text-gradient">Live AI Engine</h3>
+              </div>
+              <ul className="space-y-5">
+                {[
+                  "Question answering with source citations",
+                  "Step-by-step explanations",
+                  "Handle LaTeX equations & handwritten photos",
+                  "Integrated with the question logger"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-4 text-slate-600 font-medium">
+                    <div className="w-6 h-6 bg-accent/10 text-accent rounded-full flex items-center justify-center">
+                      <CheckCircle2 size={14} />
+                    </div>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+         </div>
+         <div className="h-full py-4">
+            <MediaPlaceholder 
+              title="Live RAG Demo" 
+              src="/demo-video.mp4" 
+              type="video" 
+              alt="RAG Interface Demo" 
+            />
+         </div>
+      </div>
+    ),
+  },
+  {
+    id: 7,
+    title: "Project Management & Sprints",
+    content: (
+      <div className="flex flex-col h-full space-y-4 py-2">
+        <div className="overflow-hidden rounded-3xl border border-slate-200 glass-card shadow-sm">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-slate-50 border-b border-slate-100">
+              <tr>
+                <th className="px-6 py-3 font-bold text-[10px] uppercase tracking-widest text-slate-400">Feature</th>
+                <th className="px-6 py-3 font-bold text-[10px] uppercase tracking-widest text-slate-400">Priority</th>
+                <th className="px-6 py-3 font-bold text-[10px] uppercase tracking-widest text-slate-400">Complexity</th>
+                <th className="px-6 py-3 font-bold text-[10px] uppercase tracking-widest text-slate-400">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {[
+                { f: "User Auth + Syllabus Graph", p: "P0", c: "High", s: "In Progress" },
+                { f: "RAG Chatbot Integration", p: "P0", c: "Medium", s: "Ready" },
+                { f: "Question Logger", p: "P1", c: "Medium", s: "Planned" },
+                { f: "Recommendation Engine", p: "P1", c: "High", s: "Backlog" }
+              ].map((row, i) => (
+                <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="px-6 py-3 font-bold text-primary text-sm">{row.f}</td>
+                  <td className="px-6 py-3"><span className="px-2 py-0.5 bg-red-100 text-red-600 text-[10px] font-black rounded uppercase tracking-tighter border border-red-200">{row.p}</span></td>
+                  <td className="px-6 py-3 text-slate-400 text-[10px] font-medium">{row.c}</td>
+                  <td className="px-6 py-3"><span className={`text-[10px] font-black uppercase tracking-tighter ${row.s === 'Ready' ? 'text-accent' : 'text-slate-300'}`}>{row.s}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="grid grid-cols-4 gap-4">
+           {[1,2,3,4].map(s => (
+             <div key={s} className={`p-5 rounded-2xl border transition-all ${s === 1 ? 'border-accent bg-accent/5' : 'border-slate-200 bg-white shadow-sm'}`}>
+                <p className="text-[10px] font-black text-slate-300 mb-1 tracking-widest uppercase">SPRINT {s}</p>
+                <p className="text-sm font-bold text-primary">Weeks {s*2-1}-{s*2}</p>
+             </div>
+           ))}
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: 8,
+    title: "Next Steps & Current Status",
+    content: (
+      <div className="grid grid-cols-2 gap-12 h-full items-center">
+        <div className="space-y-4">
+           {[
+             { label: "✅ Figma designs complete", sub: "For all core pages" },
+             { label: "✅ Design system documented", sub: "Tokens and guidelines set" },
+             { label: "✅ RAG chatbot functional", sub: "Pre-existing, expanded" },
+             { label: "🔄 Backend development started", sub: "Neo4j graph, vector DB" },
+             { label: "🔄 Sprint 1 in progress", sub: "User auth + syllabus parser" },
+             { label: "📅 Expected MVP launch", sub: "3 months from now" }
+           ].map((step, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="flex items-center gap-4 p-3 glass-card rounded-2xl group"
+                >
+                  <div className="w-2 h-2 rounded-full bg-accent group-hover:scale-150 transition-transform shadow-sm shadow-accent/40" />
+                  <div>
+                     <p className="font-bold text-lg text-primary">{step.label}</p>
+                     <p className="text-slate-400 text-[10px] uppercase tracking-widest">{step.sub}</p>
+                  </div>
+                </motion.div>
+            ))}
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+           <MetricCard value={100} suffix="%" label="Figma Designs" delay={0.2} />
+           <MetricCard value={1} label="Design System" suffix=" Document" delay={0.3} />
+           <MetricCard value={85} suffix="%" label="AI Engine Ready" delay={0.4} />
+           <MetricCard value={3} suffix=" Months" label="To MVP" delay={0.5} />
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: 9,
+    title: "Q&A / Thank You",
+    content: (
+      <div className="flex flex-col items-center justify-center h-full text-center space-y-8">
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="w-24 h-24 bg-accent text-white rounded-[2rem] flex items-center justify-center shadow-lg shadow-accent/20 rotate-3"
+        >
+          <MessageSquare size={48} />
+        </motion.div>
+        <h2 className="text-7xl font-black text-primary tracking-tighter">Thank you – Questions?</h2>
+        <p className="text-2xl text-slate-500 font-medium max-w-xl">
+          Thank you for your time. Let's discuss how SyllabAI is shaping the future of education.
+        </p>
+        <div className="pt-12 text-slate-300 space-y-1 font-mono text-sm tracking-widest uppercase">
+          <p className="text-accent font-black">syllabai.edu</p>
+          <p>contact@syllabai.edu</p>
+        </div>
+      </div>
+    ),
+  },
+];
+
+export default function App() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [direction, setDirection] = useState(0);
+
+  const paginate = (newDirection) => {
+    if (currentSlide + newDirection >= 0 && currentSlide + newDirection < SLIDES.length) {
+      setDirection(newDirection);
+      setCurrentSlide(currentSlide + newDirection);
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') paginate(1);
+      if (e.key === 'ArrowLeft') paginate(-1);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentSlide]);
+
+  return (
+    <div className="fixed inset-0 bg-site-bg overflow-hidden flex flex-col select-none text-primary">
+      <div className="mesh-bg" />
+      <ParticleField count={30} color="203, 213, 225" />
+      
+      {/* Background Decor */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px] -mr-64 -mt-64" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px] -ml-64 -mb-64" />
+
+      {/* Header */}
+      <header className="px-12 py-6 flex justify-between items-center relative z-20">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-accent/20">S</div>
+          <span className="font-black text-2xl tracking-tighter">Syllab<span className="text-accent italic">AI</span></span>
+        </div>
+        <div className="flex items-center gap-8">
+          <div className="text-[10px] font-black text-slate-300 tracking-[0.4em] uppercase">
+            Progress Phase II
+          </div>
+          <div className="h-6 w-px bg-slate-200" />
+          <div className="text-sm font-black font-mono">
+            <span className="text-accent">{String(currentSlide + 1).padStart(2, '0')}</span> 
+            <span className="text-slate-200 mx-2">/</span> 
+            <span className="text-slate-400">{String(SLIDES.length).padStart(2, '0')}</span>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 relative px-12 pb-32">
+        <AnimatePresence initial={false} custom={direction} mode="wait">
+          <motion.div
+            key={currentSlide}
+            custom={direction}
+            variants={getTransition(currentSlide)}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            className="w-full h-full flex flex-col"
+          >
+            {currentSlide > 0 && (
+              <motion.h2 
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="text-4xl font-black mb-6 text-gradient"
+              >
+                {SLIDES[currentSlide].title}
+              </motion.h2>
+            )}
+            <div className="flex-1">
+              {SLIDES[currentSlide].content}
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </main>
+
+      {/* Progress Bar */}
+      <div className="fixed bottom-0 left-0 right-0 h-1 bg-slate-100 z-50">
+        <motion.div 
+          initial={false}
+          animate={{ width: `${((currentSlide + 1) / SLIDES.length) * 100}%` }}
+          className="h-full bg-accent"
+        />
+      </div>
+
+      {/* Navigation Controls */}
+      <div className="fixed bottom-8 left-12 right-12 flex justify-between items-center z-50">
+        <div className="flex gap-4">
+          <button 
+            onClick={() => paginate(-1)}
+            disabled={currentSlide === 0}
+            className={`p-4 rounded-2xl transition-all border ${currentSlide === 0 ? 'opacity-0 pointer-events-none' : 'bg-white shadow-sm hover:shadow-md border-slate-200 text-primary'}`}
+          >
+            <ChevronLeft size={28} />
+          </button>
+          <button 
+            onClick={() => paginate(1)}
+            disabled={currentSlide === SLIDES.length - 1}
+            className={`p-4 rounded-2xl transition-all border ${currentSlide === SLIDES.length - 1 ? 'opacity-0 pointer-events-none' : 'bg-accent shadow-lg shadow-accent/20 hover:scale-105 text-white border-accent'}`}
+          >
+            <ChevronRight size={28} />
+          </button>
+        </div>
+        <div className="flex items-center gap-4 text-slate-300 text-[10px] font-black uppercase tracking-[0.3em]">
+           <Clock size={16} className="text-accent" />
+           <span>Session End: {currentSlide === 0 ? '06' : String(Math.max(0, 6 - Math.floor(currentSlide * 0.7))).padStart(2, '0')}:00</span>
+        </div>
+      </div>
+
+      {/* Slide Indicator Dots */}
+      <div className="fixed right-12 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-50">
+         {SLIDES.map((_, i) => (
+           <button
+             key={i}
+             onClick={() => {
+               setDirection(i > currentSlide ? 1 : -1);
+               setCurrentSlide(i);
+             }}
+             className={`w-1.5 transition-all duration-500 rounded-full ${i === currentSlide ? 'bg-accent h-10 shadow-sm shadow-accent/40' : 'bg-slate-200 h-1.5'}`}
+           />
+         ))}
+      </div>
+    </div>
+  );
+}

@@ -325,10 +325,27 @@ const SLIDES = [
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="pt-12 text-lg text-slate-400"
+          className="pt-12 w-full max-w-4xl mx-auto"
         >
-          <p className="font-bold text-primary text-xl">[Your Name / Team Name]</p>
-          <p>{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+          <div className="mb-8">
+            <span className="px-5 py-2 bg-accent/10 text-accent font-black text-sm uppercase tracking-[0.2em] rounded-full border border-accent/20 shadow-lg shadow-accent/5">
+              Team: Delulu Agents
+            </span>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+            {[
+              { name: "Nawaf Al Hussain Khondokar", id: "0112420136" },
+              { name: "Iqra Hoque", id: "0112420347" },
+              { name: "Sabab Sadman", id: "0112420274" },
+              { name: "Mahiya Marjan Ame", id: "0112420318" }
+            ].map((member, idx) => (
+              <div key={idx} className="glass-card p-4 rounded-2xl flex flex-col items-center justify-center hover:border-accent/30 transition-colors group hover:-translate-y-1 duration-300">
+                <p className="font-bold text-primary text-xs mb-2 group-hover:text-accent transition-colors">{member.name}</p>
+                <p className="text-[10px] text-accent font-mono font-bold bg-accent/5 px-2 py-1 rounded-md tracking-wider border border-accent/10">{member.id}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-8 text-sm font-medium text-slate-400">{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
         </motion.div>
       </div>
     ),
@@ -583,8 +600,29 @@ export default function App() {
       if (e.key === 'ArrowRight' || e.key === ' ') paginate(1);
       if (e.key === 'ArrowLeft') paginate(-1);
     };
+
+    let lastScrollTime = 0;
+    const handleWheel = (e) => {
+      const now = new Date().getTime();
+      // Add a small delay between scroll events to prevent multiple slides from firing at once
+      if (now - lastScrollTime < 1000) return;
+      
+      if (e.deltaY > 30 && currentSlide < SLIDES.length - 1) {
+        paginate(1);
+        lastScrollTime = now;
+      } else if (e.deltaY < -30 && currentSlide > 0) {
+        paginate(-1);
+        lastScrollTime = now;
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('wheel', handleWheel);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('wheel', handleWheel);
+    };
   }, [currentSlide]);
 
   return (
@@ -643,52 +681,9 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {/* Progress Bar */}
-      <div className="fixed bottom-0 left-0 right-0 h-1 bg-slate-100 z-50">
-        <motion.div 
-          initial={false}
-          animate={{ width: `${((currentSlide + 1) / SLIDES.length) * 100}%` }}
-          className="h-full bg-accent"
-        />
-      </div>
 
-      {/* Navigation Controls */}
-      <div className="fixed bottom-8 left-12 right-12 flex justify-between items-center z-50">
-        <div className="flex gap-4">
-          <button 
-            onClick={() => paginate(-1)}
-            disabled={currentSlide === 0}
-            className={`p-4 rounded-2xl transition-all border ${currentSlide === 0 ? 'opacity-0 pointer-events-none' : 'bg-white shadow-sm hover:shadow-md border-slate-200 text-primary'}`}
-          >
-            <ChevronLeft size={28} />
-          </button>
-          <button 
-            onClick={() => paginate(1)}
-            disabled={currentSlide === SLIDES.length - 1}
-            className={`p-4 rounded-2xl transition-all border ${currentSlide === SLIDES.length - 1 ? 'opacity-0 pointer-events-none' : 'bg-accent shadow-lg shadow-accent/20 hover:scale-105 text-white border-accent'}`}
-          >
-            <ChevronRight size={28} />
-          </button>
-        </div>
-        <div className="flex items-center gap-4 text-slate-300 text-[10px] font-black uppercase tracking-[0.3em]">
-           <Clock size={16} className="text-accent" />
-           <span>Session End: {currentSlide === 0 ? '06' : String(Math.max(0, 6 - Math.floor(currentSlide * 0.7))).padStart(2, '0')}:00</span>
-        </div>
-      </div>
 
-      {/* Slide Indicator Dots */}
-      <div className="fixed right-12 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-50">
-         {SLIDES.map((_, i) => (
-           <button
-             key={i}
-             onClick={() => {
-               setDirection(i > currentSlide ? 1 : -1);
-               setCurrentSlide(i);
-             }}
-             className={`w-1.5 transition-all duration-500 rounded-full ${i === currentSlide ? 'bg-accent h-10 shadow-sm shadow-accent/40' : 'bg-slate-200 h-1.5'}`}
-           />
-         ))}
-      </div>
+
     </div>
   );
 }

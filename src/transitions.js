@@ -279,12 +279,41 @@ export const liquidMorphVariants = {
     })
 };
 
+export const depthOfFieldVariants = {
+    enter: (direction = 1) => ({
+        opacity: 0,
+        scale: 1.1,
+        filter: "blur(20px)",
+        z: -100
+    }),
+    center: {
+        opacity: 1,
+        scale: 1,
+        filter: "blur(0px)",
+        z: 0,
+        transition: {
+            duration: 0.8,
+            ease: [0.22, 1, 0.36, 1],
+            filter: { duration: 1.2 }
+        }
+    },
+    exit: (direction = 1) => ({
+        opacity: 0,
+        scale: 0.9,
+        filter: "blur(20px)",
+        z: -100,
+        transition: {
+            duration: 0.5
+        }
+    })
+};
+
 export const getTransition = (index) => {
     const transitions = [
         maskRevealVariants,
         parallaxPushVariants,
         warpSpeedVariants,
-        liquidMorphVariants,
+        depthOfFieldVariants, // Slide 4
         lensApertureVariants,
         exposureWashVariants,
         fadeZoomVariants,

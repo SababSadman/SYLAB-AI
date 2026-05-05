@@ -265,10 +265,10 @@ const FigmaDesignsPreview = () => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   const items = [
-    { title: "Student Dashboard", desc: "Personalized home for Nawaf – course overview, revision progress, and study plan", src: "/student_dashboard_real.png", type: 'image' },
-    { title: "Revision Note", desc: "Structured syllabus content with interactive diagrams and key formula highlights", src: "/revision-note.png", type: 'image' },
+    { title: "Student Dashboard", desc: "Personalized home for Nawaf – course overview, revision progress, and study plan", src: "/student-v3.png", type: 'image' },
+    { title: "Revision Note", desc: "Structured syllabus content with interactive diagrams and key formula highlights", src: "/revision-notes-v3.png", type: 'image' },
     { title: "AI Tutor (RAG Chat)", desc: "Full chat interface with citations and source links", src: "/ai_tutor_real.png", type: 'image' },
-    { title: "Course Page", desc: "Detailed syllabus breakdown, topic-wise progress tracking, and resources", src: "/course_page_real.png", type: 'image' }
+    { title: "Course Page", desc: "Detailed syllabus breakdown, topic-wise progress tracking, and resources", src: "/course-v3.png", type: 'image' }
   ];
 
   return (
@@ -388,6 +388,64 @@ const MediaPlaceholder = ({ src, type = 'image', alt, title }) => {
         <p className="text-white text-xs font-bold uppercase tracking-widest">{title}</p>
       </div>
     </div>
+  );
+};
+
+const VideoPreview = ({ src, title }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <motion.div 
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={() => setIsOpen(true)}
+        className="w-full h-full cursor-pointer relative group overflow-hidden rounded-[2.5rem] shadow-2xl border border-white"
+      >
+        <MediaPlaceholder src={src} type="video" title={title} />
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 backdrop-blur-[2px]">
+          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-2xl">
+            <Play size={32} className="text-accent ml-1" />
+          </div>
+        </div>
+      </motion.div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-8 md:p-20 bg-slate-950/90 backdrop-blur-xl"
+            onClick={() => setIsOpen(false)}
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="relative w-full max-w-6xl aspect-video bg-black rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/10"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button 
+                onClick={() => setIsOpen(false)}
+                className="absolute top-6 right-6 z-10 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-colors"
+              >
+                <X size={24} />
+              </button>
+              <video 
+                src={src} 
+                className="w-full h-full" 
+                controls 
+                autoPlay 
+              />
+              <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
+                <h3 className="text-white font-black text-2xl uppercase tracking-tighter">{title}</h3>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
@@ -567,11 +625,9 @@ const SLIDES = [
             </div>
          </div>
          <div className="h-full py-4">
-            <MediaPlaceholder 
+            <VideoPreview 
               title="Live RAG Demo" 
-              src="/demo-video.mp4" 
-              type="video" 
-              alt="RAG Interface Demo" 
+              src="/rag-demo.webm" 
             />
          </div>
       </div>

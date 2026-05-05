@@ -37,19 +37,27 @@ export const FloatingElement = ({ children, delay = 0, y = 10 }) => (
   </motion.div>
 );
 
-export const ScanLine = ({ color = "20, 184, 166" }) => (
-  <motion.div
-    className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/10 to-transparent pointer-events-none"
-    animate={{
-      y: ["-100%", "100%"]
-    }}
-    transition={{
-      duration: 3,
-      repeat: Infinity,
-      ease: "linear"
-    }}
-  />
-);
+export const ScanLine = ({ color = "20, 184, 166" }) => {
+  const isHex = color.startsWith('#');
+  const bgColor = isHex ? `${color}20` : `rgba(${color}, 0.1)`;
+  
+  return (
+    <motion.div
+      className="absolute inset-0 pointer-events-none"
+      style={{ 
+        background: `linear-gradient(to bottom, transparent, ${bgColor}, transparent)` 
+      }}
+      animate={{
+        y: ["-100%", "100%"]
+      }}
+      transition={{
+        duration: 3,
+        repeat: Infinity,
+        ease: "linear"
+      }}
+    />
+  );
+};
 
 export const ParticleField = ({ count = 15, color = "29, 175, 180" }) => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">

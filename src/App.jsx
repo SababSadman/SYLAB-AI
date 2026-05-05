@@ -23,23 +23,34 @@ import { getTransition } from './transitions.js';
 import { ParticleField, MetricCard, ScanLine } from './components.jsx';
 
 const LookAndFeelPlayground = () => {
-  const [activeColor, setActiveColor] = useState('#204852');
+  const [activeColor, setActiveColor] = useState('#663fbf');
   const [hoveredToken, setHoveredToken] = useState(null);
 
   const colors = [
-    { hex: '#204852', name: 'Blue Dianne' },
-    { hex: '#0066FF', name: 'Blue Ribbon' },
-    { hex: '#F3FFD8', name: 'Carla' },
-    { hex: '#DC143C', name: 'Crimson' },
-    { hex: '#4A2E9B', name: 'Daisy Bush' },
-    { hex: '#F9FF8B', name: 'Dolly' }
+    { hex: '#323232', name: 'Primary' },
+    { hex: '#663fbf', name: 'Accent' },
+    { hex: '#000000', name: 'Base' },
+    { hex: '#ffffff', name: 'Muted' },
+    { hex: '#fbfafa', name: 'Raised' }
   ];
 
+  const spacing = {
+    1: '7px', 2: '8px', 3: '12px', 4: '16px', 5: '24px', 6: '40px', 7: '48px'
+  };
+
+  const radius = {
+    xs: '8px', sm: '24px', md: '50px', lg: '160px', xl: '800px'
+  };
+
+  const motionTokens = {
+    instant: 0.15, fast: 0.2, normal: 0.4
+  };
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full items-center py-4">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full items-center py-4" style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}>
       <div className="space-y-8 w-full">
         <section>
-          <h3 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Interactive Palette</h3>
+          <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4">Interactive Palette</h3>
           <div className="flex flex-wrap gap-4">
             {colors.map((color) => (
               <motion.button
@@ -47,13 +58,14 @@ const LookAndFeelPlayground = () => {
                 whileHover={{ y: -5, scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setActiveColor(color.hex)}
-                className={`group relative flex flex-col items-center gap-3 p-2 rounded-2xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-300 ${activeColor === color.hex ? 'bg-white shadow-xl ring-1 ring-black/5' : 'hover:bg-white/60'}`}
+                className={`group relative flex flex-col items-center gap-3 p-2 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${activeColor === color.hex ? 'bg-white shadow-xl ring-1 ring-black/5' : 'hover:bg-white/40'}`}
+                style={{ borderRadius: radius.sm }}
               >
                 <div 
-                  className="w-12 h-12 rounded-xl shadow-inner border border-black/5 transition-transform"
-                  style={{ backgroundColor: color.hex }}
+                  className="w-12 h-12 shadow-inner border border-black/5 transition-transform"
+                  style={{ backgroundColor: color.hex, borderRadius: radius.xs }}
                 />
-                <span className="text-[10px] font-mono text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6 whitespace-nowrap">{color.name}</span>
+                <span className="text-[10px] font-mono text-slate-500 opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6 whitespace-nowrap">{color.name}</span>
                 {activeColor === color.hex && (
                   <motion.div layoutId="active-swatch" className="absolute -bottom-1 w-1.5 h-1.5 bg-slate-800 rounded-full" />
                 )}
@@ -63,55 +75,76 @@ const LookAndFeelPlayground = () => {
         </section>
 
         <section className="pt-4">
-          <h3 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Responsive Typography</h3>
+          <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4">Responsive Typography</h3>
           <motion.div 
-            className="space-y-1 group cursor-default p-4 -ml-4 rounded-2xl hover:bg-white/40 transition-colors"
+            className="space-y-1 group cursor-default transition-all"
+            style={{ padding: spacing[4], marginLeft: `-${spacing[4]}`, borderRadius: radius.sm }}
             onHoverStart={() => setHoveredToken('typo')}
             onHoverEnd={() => setHoveredToken(null)}
+            whileHover={{ backgroundColor: 'rgba(0,0,0,0.03)' }}
           >
             <motion.p 
-              className="text-5xl lg:text-6xl font-black tracking-tighter transition-colors duration-300"
-              style={{ color: hoveredToken === 'typo' ? activeColor : '#0F2233' }}
+              className="font-black tracking-tighter transition-colors"
+              style={{ 
+                color: hoveredToken === 'typo' ? activeColor : '#323232',
+                fontSize: '48px', // Using a larger display size for 'Manrope' (now Jakarta)
+                lineHeight: '1.1'
+              }}
               whileHover={{ x: 10 }}
             >
-              Manrope
+              Plus Jakarta Sans
             </motion.p>
-            <p className="text-sm text-slate-500 font-medium mt-2">Hierarchy: Display, H1, Body, Label</p>
-            <p className="text-xs text-slate-400 font-medium mt-1">Spacing & rounded corners scale defined.</p>
+            <p className="text-sm font-medium mt-2" style={{ color: '#663fbf' }}>Hierarchy: Display, H1, Body, Label</p>
+            <p className="text-xs font-medium mt-1" style={{ color: '#323232', opacity: 0.6 }}>Spacing & rounded corners scale defined.</p>
           </motion.div>
         </section>
 
         <section className="pt-4">
-          <h3 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Button System</h3>
+          <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4">Button System</h3>
           <div className="flex flex-wrap gap-4">
             <motion.button 
               whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-2.5 rounded-xl font-bold text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 relative overflow-hidden group"
-              style={{ backgroundColor: activeColor, boxShadow: `0 10px 20px -5px ${activeColor}40`, '--tw-ring-color': activeColor }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ duration: motionTokens.instant }}
+              className="font-bold text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 relative overflow-hidden group"
+              style={{ 
+                backgroundColor: activeColor, 
+                boxShadow: `0 10px 20px -5px ${activeColor}40`, 
+                padding: `${spacing[3]} ${spacing[5]}`,
+                borderRadius: radius.md,
+                fontSize: '16px'
+              }}
             >
               <span className="relative z-10">Primary</span>
-              <motion.div className="absolute inset-0 bg-white/20 origin-left" initial={{ scaleX: 0 }} whileHover={{ scaleX: 1 }} transition={{ duration: 0.3 }} />
+              <motion.div className="absolute inset-0 bg-white/20 origin-left" initial={{ scaleX: 0 }} whileHover={{ scaleX: 1 }} transition={{ duration: motionTokens.fast }} />
             </motion.button>
             <motion.button 
-              whileHover={{ scale: 1.05, y: -2, backgroundColor: '#e2e8f0' }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-2.5 rounded-xl font-bold text-slate-700 bg-slate-100 shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400 relative overflow-hidden"
+              whileHover={{ scale: 1.05, y: -2, backgroundColor: '#f1f5f9' }}
+              whileTap={{ scale: 0.98 }}
+              className="font-bold text-slate-700 bg-slate-100 shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400 relative overflow-hidden"
+              style={{ padding: `${spacing[3]} ${spacing[5]}`, borderRadius: radius.md, fontSize: '16px' }}
             >
               Secondary
             </motion.button>
             <motion.button 
-              whileHover={{ scale: 1.05, y: -2, backgroundColor: `${activeColor}15` }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-2.5 rounded-xl font-bold border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-transparent transition-colors" 
-              style={{ borderColor: activeColor, color: activeColor, '--tw-ring-color': activeColor }}
+              whileHover={{ scale: 1.05, y: -2, backgroundColor: `${activeColor}10` }}
+              whileTap={{ scale: 0.98 }}
+              className="font-bold border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-transparent transition-colors" 
+              style={{ 
+                borderColor: activeColor, 
+                color: activeColor, 
+                padding: `${spacing[3]} ${spacing[5]}`, 
+                borderRadius: radius.md,
+                fontSize: '16px'
+              }}
             >
               Outline
             </motion.button>
             <motion.button 
-              whileHover={{ scale: 1.05, y: -2, backgroundColor: '#f1f5f9', color: activeColor }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-2.5 rounded-xl font-bold text-slate-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-300 transition-colors"
+              whileHover={{ scale: 1.05, y: -2, backgroundColor: 'rgba(0,0,0,0.02)', color: activeColor }}
+              whileTap={{ scale: 0.98 }}
+              className="font-bold text-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors"
+              style={{ padding: `${spacing[3]} ${spacing[5]}`, borderRadius: radius.md, fontSize: '16px' }}
             >
               Ghost
             </motion.button>
@@ -119,30 +152,35 @@ const LookAndFeelPlayground = () => {
         </section>
       </div>
 
-      <div className="relative h-full flex items-center justify-center p-4 min-h-[400px]">
+      <div className="relative h-full flex items-center justify-center p-4">
         {/* Breathing backdrop glow */}
         <motion.div 
-          className="absolute inset-0 blur-[80px] opacity-20 pointer-events-none"
+          className="absolute inset-0 blur-[100px] opacity-20 pointer-events-none"
           style={{ backgroundColor: activeColor }}
-          animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.3, 0.15] }}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
         
         <motion.div 
-          className="glass-card rounded-[3rem] w-full max-w-md aspect-[4/3] lg:aspect-square relative overflow-hidden p-8 flex flex-col shadow-2xl group border border-white/60 bg-white/40 backdrop-blur-xl"
-          animate={{ borderColor: `${activeColor}30` }}
+          className="w-full max-w-md aspect-square relative overflow-hidden flex flex-col shadow-2xl group border backdrop-blur-2xl"
+          style={{ 
+            backgroundColor: 'rgba(251, 250, 250, 0.6)', // Raised surface with glass
+            borderColor: 'rgba(255, 255, 255, 0.5)',
+            borderRadius: radius.sm,
+            padding: spacing[5],
+            boxShadow: 'rgba(59, 68, 89, 0.16) 0px 4px 30px 0px'
+          }}
           whileHover={{ scale: 1.02, rotateY: -5, rotateX: 5 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          style={{ perspective: 1000 }}
         >
           <ScanLine color={activeColor} />
           
           {/* Header Mockup */}
-          <div className="flex justify-between items-center z-10 mb-8">
+          <div className="flex justify-between items-center z-10" style={{ marginBottom: spacing[5] }}>
             <motion.div 
-              className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-xl cursor-pointer"
-              style={{ backgroundColor: activeColor }}
-              whileHover={{ rotate: 180, scale: 1.1, borderRadius: "50%" }}
+              className="w-14 h-14 flex items-center justify-center text-white shadow-xl cursor-pointer"
+              style={{ backgroundColor: activeColor, borderRadius: radius.xs }}
+              whileHover={{ rotate: 180, scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               layout
             >
@@ -162,16 +200,17 @@ const LookAndFeelPlayground = () => {
           {/* Interactive Chart/Progress area */}
           <div className="space-y-6 z-10 flex-1 flex flex-col justify-center">
             <motion.div 
-              className="space-y-3 bg-white/50 p-5 rounded-2xl border border-white/50 backdrop-blur-sm shadow-sm"
+              className="space-y-3 bg-white/50 border border-white/50 backdrop-blur-sm shadow-sm"
+              style={{ padding: spacing[4], borderRadius: radius.xs }}
               whileHover={{ y: -5, boxShadow: "0 20px 40px -10px rgba(0,0,0,0.05)" }}
             >
-              <div className="flex justify-between text-xs font-bold text-slate-500 uppercase tracking-widest">
+              <div className="flex justify-between text-[10px] font-black text-slate-400 uppercase tracking-widest">
                 <span>System Analytics</span>
                 <motion.span style={{ color: activeColor }}>98%</motion.span>
               </div>
               <motion.div 
-                className="w-full h-4 rounded-full bg-slate-100 overflow-hidden relative cursor-crosshair"
-                whileHover={{ height: 20 }}
+                className="w-full h-3 rounded-full bg-slate-100 overflow-hidden relative cursor-crosshair"
+                whileHover={{ height: 16 }}
               >
                 <motion.div 
                   className="absolute left-0 top-0 bottom-0 rounded-full shadow-inner"
@@ -193,16 +232,17 @@ const LookAndFeelPlayground = () => {
                    drag
                    dragConstraints={{ left: -10, right: 10, top: -10, bottom: 10 }}
                    whileDrag={{ scale: 1.1, zIndex: 50, cursor: 'grabbing' }}
-                   className="h-28 rounded-2xl bg-white/80 backdrop-blur-md border border-white p-4 flex flex-col justify-between shadow-lg cursor-grab hover:shadow-xl relative overflow-hidden"
-                   whileHover={{ y: -5, borderColor: activeColor + '80' }}
+                   className="h-28 bg-white/80 backdrop-blur-md border border-white flex flex-col justify-between shadow-lg cursor-grab hover:shadow-xl relative overflow-hidden"
+                   style={{ borderRadius: radius.xs, padding: spacing[3] }}
+                   whileHover={{ y: -4, borderColor: activeColor + '80' }}
                  >
                    <div className="absolute -right-4 -top-4 w-16 h-16 rounded-full opacity-10" style={{ backgroundColor: activeColor }} />
-                   <div className="w-10 h-10 rounded-xl flex items-center justify-center relative z-10" style={{ backgroundColor: activeColor + '15', color: activeColor }}>
+                   <div className="w-10 h-10 flex items-center justify-center relative z-10" style={{ backgroundColor: activeColor + '15', color: activeColor, borderRadius: radius.xs }}>
                      {item.icon}
                    </div>
                    <div className="w-full space-y-2 relative z-10">
-                     <p className="text-[11px] font-black text-slate-600 uppercase tracking-wider">{item.label}</p>
-                     <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                     <p className="text-[10px] font-black text-slate-600 uppercase tracking-wider">{item.label}</p>
+                     <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                        <motion.div 
                          className="h-full rounded-full" 
                          style={{ backgroundColor: activeColor }} 
@@ -225,10 +265,10 @@ const FigmaDesignsPreview = () => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   const items = [
-    { title: "Student Dashboard", desc: "Knowledge Graph preview, recent activity, recommended next steps", src: "/syllabai_dashboard_mockup_1777899157746.png", type: 'image' },
-    { title: "Past Paper Viewer", desc: "Mark scheme toggle, question logger controls, AI chat sidebar", src: "/demo-video.mp4", type: 'video' },
-    { title: "AI Tutor (RAG Chat)", desc: "Full chat interface with citations and source links", src: "/syllabai_rag_chat_mockup_1777899174277.png", type: 'image' },
-    { title: "Teacher Hub", desc: "Class KG heatmap, assignment submissions, at-risk alerts", src: "/syllabai_teacher_hub_mockup_1777899192610.png", type: 'image' }
+    { title: "Student Dashboard", desc: "Personalized home for Nawaf – course overview, revision progress, and study plan", src: "/student_dashboard_real.png", type: 'image' },
+    { title: "Revision Note", desc: "Structured syllabus content with interactive diagrams and key formula highlights", src: "/revision-note.png", type: 'image' },
+    { title: "AI Tutor (RAG Chat)", desc: "Full chat interface with citations and source links", src: "/ai_tutor_real.png", type: 'image' },
+    { title: "Course Page", desc: "Detailed syllabus breakdown, topic-wise progress tracking, and resources", src: "/course_page_real.png", type: 'image' }
   ];
 
   return (

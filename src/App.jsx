@@ -23,53 +23,56 @@ import { getTransition } from './transitions.js';
 import { ParticleField, MetricCard, ScanLine } from './components.jsx';
 
 const LookAndFeelPlayground = () => {
-  const [activeColor, setActiveColor] = useState('#29AFB4');
+  const [activeColor, setActiveColor] = useState('#204852');
   const [hoveredToken, setHoveredToken] = useState(null);
 
   const colors = [
-    { hex: '#0F2233', name: 'Primary' },
-    { hex: '#29AFB4', name: 'Tertiary' },
-    { hex: '#F8FAFC', name: 'Neutral' },
-    { hex: '#FFFFFF', name: 'White Cards' }
+    { hex: '#204852', name: 'Blue Dianne' },
+    { hex: '#0066FF', name: 'Blue Ribbon' },
+    { hex: '#F3FFD8', name: 'Carla' },
+    { hex: '#DC143C', name: 'Crimson' },
+    { hex: '#4A2E9B', name: 'Daisy Bush' },
+    { hex: '#F9FF8B', name: 'Dolly' }
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-12 h-full items-center py-4">
-      <div className="space-y-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 h-full items-center py-4">
+      <div className="space-y-8 w-full">
         <section>
           <h3 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Interactive Palette</h3>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
             {colors.map((color) => (
               <motion.button
                 key={color.hex}
                 whileHover={{ y: -5, scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setActiveColor(color.hex)}
-                className={`group relative flex flex-col items-center gap-3 p-2 rounded-2xl transition-all ${activeColor === color.hex ? 'bg-white shadow-xl ring-1 ring-black/5' : 'hover:bg-white/40'}`}
+                className={`group relative flex flex-col items-center gap-3 p-2 rounded-2xl transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-300 ${activeColor === color.hex ? 'bg-white shadow-xl ring-1 ring-black/5' : 'hover:bg-white/60'}`}
               >
                 <div 
                   className="w-12 h-12 rounded-xl shadow-inner border border-black/5 transition-transform"
                   style={{ backgroundColor: color.hex }}
                 />
-                <span className="text-[10px] font-mono text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">{color.name}</span>
+                <span className="text-[10px] font-mono text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity absolute -bottom-6 whitespace-nowrap">{color.name}</span>
                 {activeColor === color.hex && (
-                  <motion.div layoutId="active-swatch" className="absolute -bottom-1 w-1 h-1 bg-primary rounded-full" />
+                  <motion.div layoutId="active-swatch" className="absolute -bottom-1 w-1.5 h-1.5 bg-slate-800 rounded-full" />
                 )}
               </motion.button>
             ))}
           </div>
         </section>
 
-        <section>
+        <section className="pt-4">
           <h3 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Responsive Typography</h3>
           <motion.div 
-            className="space-y-1 group cursor-default"
+            className="space-y-1 group cursor-default p-4 -ml-4 rounded-2xl hover:bg-white/40 transition-colors"
             onHoverStart={() => setHoveredToken('typo')}
             onHoverEnd={() => setHoveredToken(null)}
           >
             <motion.p 
-              className="text-5xl font-black tracking-tighter"
-              animate={{ color: hoveredToken === 'typo' ? activeColor : '#0F2233' }}
+              className="text-5xl lg:text-6xl font-black tracking-tighter transition-colors duration-300"
+              style={{ color: hoveredToken === 'typo' ? activeColor : '#0F2233' }}
+              whileHover={{ x: 10 }}
             >
               Manrope
             </motion.p>
@@ -78,84 +81,140 @@ const LookAndFeelPlayground = () => {
           </motion.div>
         </section>
 
-        <section>
+        <section className="pt-4">
           <h3 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Button System</h3>
           <div className="flex flex-wrap gap-4">
             <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-6 py-2.5 rounded-xl font-bold text-white shadow-lg transition-colors"
-              style={{ backgroundColor: activeColor, boxShadow: `0 10px 20px -5px ${activeColor}40` }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-2.5 rounded-xl font-bold text-white shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 relative overflow-hidden group"
+              style={{ backgroundColor: activeColor, boxShadow: `0 10px 20px -5px ${activeColor}40`, '--tw-ring-color': activeColor }}
             >
-              Primary
+              <span className="relative z-10">Primary</span>
+              <motion.div className="absolute inset-0 bg-white/20 origin-left" initial={{ scaleX: 0 }} whileHover={{ scaleX: 1 }} transition={{ duration: 0.3 }} />
             </motion.button>
-            <button className="px-6 py-2.5 rounded-xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-all">
+            <motion.button 
+              whileHover={{ scale: 1.05, y: -2, backgroundColor: '#e2e8f0' }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-2.5 rounded-xl font-bold text-slate-700 bg-slate-100 shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400 relative overflow-hidden"
+            >
               Secondary
-            </button>
-            <button className="px-6 py-2.5 rounded-xl font-bold border-2 transition-all" style={{ borderColor: activeColor, color: activeColor }}>
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.05, y: -2, backgroundColor: `${activeColor}15` }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-2.5 rounded-xl font-bold border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-transparent transition-colors" 
+              style={{ borderColor: activeColor, color: activeColor, '--tw-ring-color': activeColor }}
+            >
               Outline
-            </button>
-            <button className="px-6 py-2.5 rounded-xl font-bold text-slate-500 hover:bg-slate-50 transition-all">
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.05, y: -2, backgroundColor: '#f1f5f9', color: activeColor }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-2.5 rounded-xl font-bold text-slate-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-300 transition-colors"
+            >
               Ghost
-            </button>
+            </motion.button>
           </div>
         </section>
       </div>
 
-      <div className="relative h-full flex items-center justify-center">
+      <div className="relative h-full flex items-center justify-center p-4 min-h-[400px]">
+        {/* Breathing backdrop glow */}
         <motion.div 
-          className="glass-card rounded-[3rem] w-full max-h-[500px] aspect-square relative overflow-hidden p-8 flex flex-col justify-center gap-6 group"
-          animate={{ borderColor: `${activeColor}20` }}
+          className="absolute inset-0 blur-[80px] opacity-20 pointer-events-none"
+          style={{ backgroundColor: activeColor }}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.3, 0.15] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        
+        <motion.div 
+          className="glass-card rounded-[3rem] w-full max-w-md aspect-[4/3] lg:aspect-square relative overflow-hidden p-8 flex flex-col shadow-2xl group border border-white/60 bg-white/40 backdrop-blur-xl"
+          animate={{ borderColor: `${activeColor}30` }}
+          whileHover={{ scale: 1.02, rotateY: -5, rotateX: 5 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          style={{ perspective: 1000 }}
         >
           <ScanLine color={activeColor} />
           
-          {/* Animated Mockup Elements */}
-          <motion.div 
-            className="w-2/3 h-4 rounded-full bg-slate-100 relative overflow-hidden"
-            whileHover={{ scale: 1.02 }}
-          >
+          {/* Header Mockup */}
+          <div className="flex justify-between items-center z-10 mb-8">
             <motion.div 
-              className="absolute inset-0 origin-left"
+              className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-xl cursor-pointer"
               style={{ backgroundColor: activeColor }}
-              animate={{ scaleX: [0, 0.7, 0.4, 0.9] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </motion.div>
-
-          <div className="flex gap-4 items-center">
-             <motion.div 
-               className="w-16 h-16 rounded-2xl flex items-center justify-center text-white"
-               style={{ backgroundColor: activeColor }}
-               animate={{ rotate: [0, 90, 180, 270, 360] }}
-               transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-             >
-               <Zap size={32} />
-             </motion.div>
-             <div className="space-y-2 flex-1">
-                <div className="w-full h-2 bg-slate-100 rounded-full" />
-                <div className="w-1/2 h-2 bg-slate-100 rounded-full opacity-50" />
-             </div>
+              whileHover={{ rotate: 180, scale: 1.1, borderRadius: "50%" }}
+              whileTap={{ scale: 0.9 }}
+              layout
+            >
+              <Zap size={26} />
+            </motion.div>
+            <div className="flex gap-2">
+              {[1, 2, 3].map(i => (
+                <motion.div 
+                  key={i}
+                  className="w-3 h-3 rounded-full bg-slate-200 cursor-pointer"
+                  whileHover={{ scale: 1.5, backgroundColor: activeColor }}
+                />
+              ))}
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 pt-4">
-             {[1,2].map(i => (
-               <motion.div 
-                 key={i} 
-                 className="h-24 rounded-2xl bg-slate-50/50 border border-slate-100 p-4 flex flex-col justify-between"
-                 whileHover={{ y: -5, backgroundColor: '#fff', borderColor: activeColor + '40' }}
-               >
-                 <div className="w-8 h-8 rounded-lg bg-slate-100" />
-                 <div className="w-full h-2 bg-slate-100 rounded-full" />
-               </motion.div>
-             ))}
+          {/* Interactive Chart/Progress area */}
+          <div className="space-y-6 z-10 flex-1 flex flex-col justify-center">
+            <motion.div 
+              className="space-y-3 bg-white/50 p-5 rounded-2xl border border-white/50 backdrop-blur-sm shadow-sm"
+              whileHover={{ y: -5, boxShadow: "0 20px 40px -10px rgba(0,0,0,0.05)" }}
+            >
+              <div className="flex justify-between text-xs font-bold text-slate-500 uppercase tracking-widest">
+                <span>System Analytics</span>
+                <motion.span style={{ color: activeColor }}>98%</motion.span>
+              </div>
+              <motion.div 
+                className="w-full h-4 rounded-full bg-slate-100 overflow-hidden relative cursor-crosshair"
+                whileHover={{ height: 20 }}
+              >
+                <motion.div 
+                  className="absolute left-0 top-0 bottom-0 rounded-full shadow-inner"
+                  style={{ backgroundColor: activeColor }}
+                  animate={{ width: ["0%", "98%", "95%", "98%"] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                />
+              </motion.div>
+            </motion.div>
+            
+            {/* Draggable floating widgets */}
+            <div className="grid grid-cols-2 gap-4">
+               {[
+                 { icon: <BarChart size={20} />, label: "Metrics" },
+                 { icon: <Database size={20} />, label: "Storage" }
+               ].map((item, i) => (
+                 <motion.div 
+                   key={i} 
+                   drag
+                   dragConstraints={{ left: -10, right: 10, top: -10, bottom: 10 }}
+                   whileDrag={{ scale: 1.1, zIndex: 50, cursor: 'grabbing' }}
+                   className="h-28 rounded-2xl bg-white/80 backdrop-blur-md border border-white p-4 flex flex-col justify-between shadow-lg cursor-grab hover:shadow-xl relative overflow-hidden"
+                   whileHover={{ y: -5, borderColor: activeColor + '80' }}
+                 >
+                   <div className="absolute -right-4 -top-4 w-16 h-16 rounded-full opacity-10" style={{ backgroundColor: activeColor }} />
+                   <div className="w-10 h-10 rounded-xl flex items-center justify-center relative z-10" style={{ backgroundColor: activeColor + '15', color: activeColor }}>
+                     {item.icon}
+                   </div>
+                   <div className="w-full space-y-2 relative z-10">
+                     <p className="text-[11px] font-black text-slate-600 uppercase tracking-wider">{item.label}</p>
+                     <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                       <motion.div 
+                         className="h-full rounded-full" 
+                         style={{ backgroundColor: activeColor }} 
+                         animate={{ width: [`${40 + i * 10}%`, `${80 + i * 10}%`, `${40 + i * 10}%`] }} 
+                         transition={{ duration: 2 + i, repeat: Infinity, ease: "easeInOut" }} 
+                       />
+                     </div>
+                   </div>
+                 </motion.div>
+               ))}
+            </div>
           </div>
-
-          {/* Floating Accents */}
-          <motion.div 
-            className="absolute top-8 right-8 w-12 h-12 rounded-full blur-2xl"
-            animate={{ backgroundColor: activeColor, scale: [1, 1.5, 1] }}
-            transition={{ duration: 3, repeat: Infinity }}
-          />
         </motion.div>
       </div>
     </div>
@@ -636,7 +695,7 @@ export default function App() {
 
       {/* Header */}
       <header className="px-12 py-6 flex justify-between items-center relative z-20">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 invisible">
           <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-accent/20">S</div>
           <span className="font-black text-2xl tracking-tighter">Syllab<span className="text-accent italic">AI</span></span>
         </div>
